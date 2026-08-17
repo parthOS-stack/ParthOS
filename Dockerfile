@@ -1,5 +1,5 @@
 # DevOS / Laravel 13 — Render.com
-# Laravel 13 + composer.json require PHP ^8.3 (php:8.2-cli will fail composer install)
+# composer.lock pulls Symfony 8.1 (php >=8.4.1). php:8.3-cli cannot run composer install.
 
 # ---- Frontend (Vite) ----
 FROM node:22-bookworm-slim AS assets
@@ -23,7 +23,7 @@ RUN npm run build \
     && test -f public/build/manifest.json
 
 # ---- PHP application ----
-FROM php:8.3-cli-bookworm
+FROM php:8.4-cli-bookworm
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
@@ -39,15 +39,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
-        pdo \
         pdo_mysql \
         pdo_pgsql \
         zip \
         gd \
-        mbstring \
-        xml \
         bcmath \
-        fileinfo \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /var/lib/apt/lists/*
 
