@@ -73,4 +73,4 @@ RUN mkdir -p storage/framework/cache/data \
 EXPOSE 8080
 
 # Exec form so Docker does not empty $PORT at build time (shell form would).
-CMD ["sh", "-c", "if [ -n \"$APP_KEY\" ]; then echo 'APP_KEY_PRESENT'; else echo 'APP_KEY_MISSING'; fi; php artisan config:clear && php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT"]
+CMD ["sh", "-c", "php artisan config:clear && php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT"]
