@@ -6,20 +6,29 @@ FROM node:22-bookworm-slim AS assets
 
 WORKDIR /app
 
+# Render injects service env vars as build-args. NODE_ENV=production would
+# skip every package in this repo (Vite lives in devDependencies).
+ARG NODE_ENV=development
+ENV NODE_ENV=development
+
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --include=dev \
+    && test -x node_modules/.bin/vite
 
 COPY vite.config.js ./
 COPY resources ./resources
 COPY public ./public
 
-RUN npm run build
+RUN npm run build \
+    && test -f public/build/manifest.json
 
 # ---- PHP application ----
 FROM php:8.3-cli-bookworm
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
+        curl \
+        ca-certificates \
         unzip \
         libzip-dev \
         libpng-dev \
@@ -39,9 +48,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         xml \
         bcmath \
         fileinfo \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /var/lib/apt/lists/*
-
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
@@ -68,4 +76,5 @@ RUN mkdir -p storage/framework/cache/data \
 
 EXPOSE 8080
 
-CMD php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT
+# Exec form so Docker does not empty $PORT at build time (shell form would).
+CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT"]
