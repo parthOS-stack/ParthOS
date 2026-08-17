@@ -50,6 +50,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV APP_ENV=production
+ENV APP_DEBUG=false
 
 COPY . .
 
@@ -58,7 +60,8 @@ COPY --from=assets /app/public/build ./public/build
 RUN test -f composer.json && test -f artisan && test -f .env.example
 RUN cp .env.example .env
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
-RUN ls -la vendor
+RUN php artisan key:generate --force
+RUN touch database/database.sqlite
 RUN ls -la vendor/autoload.php
 
 RUN mkdir -p storage/framework/cache/data \
@@ -72,5 +75,4 @@ RUN mkdir -p storage/framework/cache/data \
 
 EXPOSE 8080
 
-# Exec form so Docker does not empty $PORT at build time (shell form would).
-CMD ["sh", "-c", "if [ -z \"$APP_KEY\" ]; then echo 'ERROR: APP_KEY_MISSING'; exit 1; else echo 'SUCCESS: APP_KEY_PRESENT'; fi; php artisan config:clear && php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT"]
+CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && php artisan serve --host 0.0.0.0 --port ${PORT}"]
