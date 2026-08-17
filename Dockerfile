@@ -50,29 +50,36 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV APP_ENV=production
-ENV APP_DEBUG=false
 
 COPY . .
 
 COPY --from=assets /app/public/build ./public/build
 
-RUN test -f composer.json && test -f artisan && test -f .env.example
-RUN cp .env.example .env
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
-RUN php artisan key:generate --force
-RUN touch database/database.sqlite
-RUN ls -la vendor/autoload.php
-
-RUN mkdir -p storage/framework/cache/data \
+RUN test -f composer.json && test -f artisan && test -f .env.example \
+    && cp .env.example .env \
+    && php -r 'file_put_contents(".env", preg_replace("/^APP_KEY=.*/m", "APP_KEY=base64:".base64_encode(random_bytes(32)), file_get_contents(".env")));' \
+    && mkdir -p storage/framework/cache/data \
         storage/framework/sessions \
         storage/framework/views \
         storage/logs \
         storage/app/public \
         bootstrap/cache \
+        database \
+    && touch database/database.sqlite \
     && chmod -R 775 storage bootstrap/cache \
-    && php artisan storage:link
+    && chmod +x docker-entrypoint.sh
+
+# --no-scripts: composer.json runs `php artisan package:discover`, which crashes
+# without APP_KEY when APP_ENV=production (composer exit 100).
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-scripts \
+    && composer dump-autoload --optimize --no-scripts \
+    && php artisan package:discover --ansi \
+    && php artisan storage:link \
+    && test -f vendor/autoload.php
+
+ENV APP_ENV=production
+ENV APP_DEBUG=false
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && php artisan serve --host 0.0.0.0 --port ${PORT}"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
