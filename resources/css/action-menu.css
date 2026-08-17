@@ -1,0 +1,249 @@
+/* ============================================================
+   DevOS shared action menus (task ⋮, project ⋮, bulk)
+   Text-only items — no icons
+   ============================================================ */
+
+.devos-action-menu,
+.dailyops-task-actions-menu {
+    position: absolute;
+    width: 220px;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    border-radius: 14px;
+    box-shadow:
+        0 18px 40px rgba(15, 23, 42, 0.12),
+        0 4px 12px rgba(15, 23, 42, 0.04);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    padding: 8px;
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+    transform-origin: top right;
+    transition: opacity 0.16s ease, transform 0.16s ease;
+    overflow: hidden;
+}
+
+.devos-action-menu.is-open,
+.dailyops-task-actions-menu.is-open {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Tailwind `.hidden` used on security locker menus */
+.devos-action-menu.hidden,
+.dailyops-task-actions-menu.hidden {
+    display: none !important;
+    opacity: 0;
+}
+
+.dailyops-bulk-menu {
+    position: fixed;
+    width: 220px;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    border-radius: 14px;
+    box-shadow:
+        0 18px 40px rgba(15, 23, 42, 0.12),
+        0 4px 12px rgba(15, 23, 42, 0.04);
+    z-index: 10050;
+    display: none;
+    flex-direction: column;
+    padding: 8px;
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+    transform-origin: top left;
+    transition: opacity 0.16s ease, transform 0.16s ease;
+    max-height: none;
+    overflow: visible;
+    user-select: none;
+}
+
+.dailyops-bulk-menu.is-open {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.dailyops-bulk-menu.is-dragging {
+    transition: none;
+    box-shadow:
+        0 22px 48px rgba(15, 23, 42, 0.18),
+        0 6px 16px rgba(15, 23, 42, 0.08);
+    opacity: 0.98;
+}
+
+.dailyops-bulk-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-dp-primary, #5c41c9);
+    border-bottom: 1px solid #f0f1f5;
+    margin: -2px -2px 6px;
+    cursor: grab;
+    touch-action: none;
+}
+
+.dailyops-bulk-menu-header:active,
+.dailyops-bulk-menu.is-dragging .dailyops-bulk-menu-header {
+    cursor: grabbing;
+}
+
+.dailyops-bulk-drag-hint {
+    color: #b0a8e8;
+    font-size: 11px;
+    letter-spacing: -1px;
+    line-height: 1;
+}
+
+body.dailyops-bulk-dragging {
+    cursor: grabbing !important;
+    user-select: none !important;
+}
+
+body.dailyops-bulk-dragging * {
+    cursor: grabbing !important;
+}
+
+.devos-action-item,
+.dailyops-task-action {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #334155;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    position: relative;
+    gap: 0;
+}
+
+.devos-action-item:hover,
+.dailyops-task-action:hover {
+    background: #f5f3ff;
+    color: #1e1b4b;
+}
+
+.devos-action-item:active,
+.dailyops-task-action:active {
+    background: #ede9fe;
+}
+
+.devos-action-item:disabled,
+.dailyops-task-action:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* Hide leftover icon nodes if any remain in markup */
+.devos-action-item .do-action-icon,
+.dailyops-task-action .do-action-icon {
+    display: none !important;
+}
+
+.devos-action-divider,
+.dailyops-action-divider {
+    height: 1px;
+    background: #f1f5f9;
+    margin: 6px 4px;
+    border: 0;
+}
+
+.devos-action-item-danger,
+.dailyops-task-action-danger {
+    color: #e53e3e;
+}
+
+.devos-action-item-danger:hover,
+.dailyops-task-action-danger:hover {
+    background: #fff5f5;
+    color: #c53030;
+}
+
+.dailyops-bulk-menu.is-busy .dailyops-task-action {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.dailyops-bulk-menu.is-busy .dailyops-task-action.is-bulk-loading {
+    opacity: 1;
+}
+
+.dailyops-bulk-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.dailyops-bulk-group-btn {
+    justify-content: space-between;
+    font-weight: 600;
+    color: #1e1b4b;
+}
+
+.dailyops-bulk-group-chevron {
+    color: #a5a0c8;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.dailyops-bulk-group:hover > .dailyops-bulk-group-btn,
+.dailyops-bulk-group.is-open > .dailyops-bulk-group-btn {
+    background: #f5f3ff;
+    color: var(--color-dp-primary, #5c41c9);
+}
+
+.dailyops-bulk-group:hover > .dailyops-bulk-group-btn .dailyops-bulk-group-chevron,
+.dailyops-bulk-group.is-open > .dailyops-bulk-group-btn .dailyops-bulk-group-chevron {
+    color: var(--color-dp-primary, #5c41c9);
+}
+
+/* Side flyout — opens beside Progress / Priority on hover */
+.dailyops-bulk-submenu {
+    position: absolute;
+    top: 0;
+    left: calc(100% - 2px);
+    right: auto;
+    z-index: 10060;
+    display: none;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 200px;
+    width: max-content;
+    margin: 0;
+    padding: 6px;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 12px;
+    box-shadow:
+        0 16px 36px rgba(15, 23, 42, 0.14),
+        0 4px 12px rgba(15, 23, 42, 0.05);
+    pointer-events: auto;
+}
+
+.dailyops-bulk-group:hover > .dailyops-bulk-submenu,
+.dailyops-bulk-group.is-open > .dailyops-bulk-submenu {
+    display: flex;
+}
+
+.dailyops-bulk-submenu.is-left {
+    left: auto;
+    right: calc(100% - 2px);
+}
+
+.dailyops-bulk-submenu .dailyops-task-action {
+    padding: 9px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+}

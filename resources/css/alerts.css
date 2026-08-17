@@ -1,0 +1,99 @@
+/* DevOS Alert Popup — bottom-right (image-3 style) */
+
+.devos-alert-stack {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 10050;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    width: min(380px, calc(100vw - 32px));
+    pointer-events: none;
+}
+
+.devos-alert {
+    pointer-events: auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 14px 14px 12px;
+    border-radius: 12px;
+    background: #1e2229;
+    color: #fff;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.16);
+    transform: translateX(120%);
+    opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+}
+
+.devos-alert.is-in {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.devos-alert.is-out {
+    transform: translateX(120%);
+    opacity: 0;
+}
+
+.devos-alert-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.06);
+    font-size: 16px;
+    line-height: 1;
+}
+
+.devos-alert--success .devos-alert-icon { color: #37c068; }
+.devos-alert--error .devos-alert-icon { color: #f87171; }
+.devos-alert--warning .devos-alert-icon { color: #fbbf24; }
+.devos-alert--info .devos-alert-icon { color: #60a5fa; }
+.devos-alert--update .devos-alert-icon { color: #a78bfa; }
+.devos-alert--delete .devos-alert-icon { color: #fb7185; }
+
+.devos-alert-body {
+    flex: 1;
+    min-width: 0;
+    padding-top: 1px;
+}
+
+.devos-alert-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.devos-alert-desc {
+    margin: 3px 0 0;
+    font-size: 12.5px;
+    color: #717681;
+    line-height: 1.4;
+}
+
+.devos-alert-close {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: 0;
+    background: transparent;
+    color: #8b8d97;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, background 0.15s;
+}
+
+.devos-alert-close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+}
