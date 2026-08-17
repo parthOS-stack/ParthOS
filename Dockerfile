@@ -45,20 +45,26 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 COPY . .
 
 COPY --from=assets /app/public/build ./public/build
 
-RUN if [ ! -f .env ]; then cp .env.example .env; fi \
-    && composer install --no-dev --optimize-autoloader --no-interaction \
-    && mkdir -p storage/framework/cache/data \
+RUN test -f composer.json && test -f artisan && test -f .env.example
+RUN cp .env.example .env
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+RUN ls -la vendor
+RUN ls -la vendor/autoload.php
+
+RUN mkdir -p storage/framework/cache/data \
         storage/framework/sessions \
         storage/framework/views \
         storage/logs \
         storage/app/public \
         bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache \
-    && php artisan storage:link || true
+    && php artisan storage:link
 
 EXPOSE 8080
 
