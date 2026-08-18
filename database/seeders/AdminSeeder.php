@@ -13,12 +13,21 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
+        $username = trim((string) env('DEVOS_ADMIN_USERNAME', ''));
+        $password = (string) env('DEVOS_ADMIN_PASSWORD', '');
+
+        if ($username === '' || $password === '') {
+            $this->command?->warn('Skipping AdminSeeder: DEVOS_ADMIN_USERNAME / DEVOS_ADMIN_PASSWORD not set.');
+
+            return;
+        }
+
         // NOTE: This is the single admin user for the system.
-        // It's recommended to rotate this password periodically.
+        // Provide credentials via environment variables instead of source control.
         Admin::updateOrCreate(
-            ['username' => 'devparth_admin'],
+            ['username' => $username],
             [
-                'password' => Hash::make('Dev$arth966-mG_xT'),
+                'password' => Hash::make($password),
             ]
         );
     }
