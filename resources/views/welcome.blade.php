@@ -1,288 +1,247 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-    <!-- Column 1: Task Progress & Reminders -->
-    <div class="flex flex-col gap-6 col-span-1">
-        <!-- Task Progress -->
-        <div class="dp-card flex flex-col h-[280px]">
-            <div class="flex justify-between items-start mb-2 gap-2 flex-wrap">
+@php($data = $dashboardData)
+<div class="dashboard-premium" data-dashboard-root>
+    <section class="dashboard-hero">
+        <div class="dashboard-wallet-card dp-card">
+            <div class="dashboard-hero-copy">
+                <h1 class="dashboard-hero-title">Today’s live snapshot</h1>
+                <p class="dashboard-hero-subtitle">Clean overview of money, task completion, and project movement.</p>
+
+                <div class="tx-wallet-metrics dashboard-hero-metrics">
+                    <div class="tx-wallet-metric">
+                        <span class="tx-wallet-metric-label">Receivable</span>
+                        <span class="tx-wallet-metric-value tx-summary-value--green">₹{{ number_format($data['wallet']['receivable'], 0) }}</span>
+                    </div>
+                    <div class="tx-wallet-metric">
+                        <span class="tx-wallet-metric-label">Payable</span>
+                        <span class="tx-wallet-metric-value tx-summary-value--red">₹{{ number_format($data['wallet']['payable'], 0) }}</span>
+                    </div>
+                    <div class="tx-wallet-metric">
+                        <span class="tx-wallet-metric-label">Net</span>
+                        <span class="tx-wallet-metric-value">₹{{ number_format($data['wallet']['net'], 0) }}</span>
+                    </div>
+                    <div class="tx-wallet-metric">
+                        <span class="tx-wallet-metric-label">Completion</span>
+                        <span class="tx-wallet-metric-value">{{ $data['task_progress']['percent'] }}%</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-hero-footer">
+                    <a href="{{ route('settings.security') }}" class="dashboard-security-shortcut">
+                        <div class="dashboard-security-top">
+                            <span class="dashboard-security-kicker">Quick Access</span>
+                            <span class="dashboard-security-arrow">Open Locker <span aria-hidden="true">→</span></span>
+                        </div>
+                        <strong>Security Locker</strong>
+                        <p>Open protected credentials and sensitive saved items.</p>
+                    </a>
+
+                    <div class="dashboard-hero-mini-stats">
+                        <div class="dashboard-hero-mini-stat dashboard-locker-stat">
+                            <span>Security Locker</span>
+                            <strong>{{ $data['security']['locker_count'] }}</strong>
+                        </div>
+                        <button type="button" class="dashboard-hero-mini-stat dashboard-privacy-stat" data-privacy-card aria-label="Reveal high security count">
+                            <span>High Security</span>
+                            <strong class="dashboard-privacy-count">{{ $data['security']['high_security_count'] }}</strong>
+                            <span class="dashboard-privacy-eye" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <line x1="3" y1="3" x2="21" y2="21"></line>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-clock-card dp-card">
+            <div class="dashboard-clock-top">
                 <div>
-                    <h2 class="text-[18px] font-bold text-[#1a1a24] mb-1">Task Progress</h2>
-                    <p class="text-[13px] text-[var(--color-dp-text-muted)]">Weekly overview of completed tasks.</p>
+                    <p class="dashboard-clock-kicker">Right now</p>
+                    <div class="dashboard-clock-day" data-dashboard-day>{{ $data['clock']['day'] }}</div>
+                    <div class="dashboard-clock-date" data-dashboard-date>{{ $data['clock']['date'] }}</div>
                 </div>
-                <div class="flex gap-2">
-                    <button class="flex items-center gap-1.5 bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-gray-200 transition-colors">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                            <line x1="16" y1="2" x2="16" y2="6" />
-                            <line x1="8" y1="2" x2="8" y2="6" />
-                            <line x1="3" y1="10" x2="21" y2="10" />
-                        </svg>
-                        THIS WEEK
-                    </button>
-                    <div class="flex items-center gap-1 bg-[#fff6df] text-[#d99f16] px-3 py-1.5 rounded-lg text-xs font-bold">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-                            <polyline points="16 7 22 7 22 13" />
-                        </svg>
-                        +12%
+                <div class="dashboard-clock-time" data-dashboard-time>{{ $data['clock']['time'] }}</div>
+            </div>
+
+            <div class="realistic-clock dashboard-realistic-clock">
+                <div class="clock-face">
+                    <div class="glass-cover"></div>
+                    <div class="hour hand" data-dashboard-hour-hand></div>
+                    <div class="minute hand" data-dashboard-minute-hand></div>
+                    <div class="second hand" data-dashboard-second-hand></div>
+                    <div class="center-circle"></div>
+                    <div class="clock-numbers">
+                        <p style="top: 12px; left: 50%; transform: translateX(-50%);" class="number">12</p>
+                        <p style="top: 50%; right: 16px; transform: translateY(-50%);" class="number">3</p>
+                        <p style="bottom: 12px; left: 50%; transform: translateX(-50%);" class="number">6</p>
+                        <p style="top: 50%; left: 16px; transform: translateY(-50%);" class="number">9</p>
                     </div>
                 </div>
             </div>
-            
-            <div class="mt-auto">
-                <div class="flex items-end gap-1 mb-1">
-                    <span class="text-[52px] font-extrabold leading-none tracking-tight text-[#1a1a24]">24</span>
-                    <span class="text-xl font-bold text-gray-400 mb-2">/32</span>
+
+            <div class="dashboard-project-mini">
+                <div class="dashboard-project-mini-item">
+                    <span>Completed</span>
+                    <strong>{{ $data['project_overview']['completed'] }}</strong>
                 </div>
-                <p class="text-sm text-gray-500 font-medium mb-6">Tasks completed</p>
-                
-                <!-- Progress Bar Container -->
-                <div class="relative pt-1">
-                    <div class="flex h-2 mb-4 overflow-hidden rounded-full bg-gray-100">
-                        <div style="width: 75%" class="flex flex-col justify-center overflow-hidden bg-gray-200"></div>
-                    </div>
-                    <div class="absolute top-0 w-full h-1 bg-gray-100"></div>
-                    <div class="absolute top-0 h-1 bg-[#1a1a24]" style="width: 75%"></div>
-                    <div class="absolute top-4 w-full h-px bg-gray-100"></div>
+                <div class="dashboard-project-mini-item">
+                    <span>In Progress</span>
+                    <strong>{{ $data['project_overview']['in_progress'] }}</strong>
+                </div>
+                <div class="dashboard-project-mini-item">
+                    <span>Not Started</span>
+                    <strong>{{ $data['project_overview']['not_started'] }}</strong>
                 </div>
             </div>
-        </div>
 
-        <!-- Reminders -->
-        <div class="dp-card flex flex-col flex-1 h-[400px]">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-[18px] font-bold text-[#1a1a24]">Reminders</h2>
-                <button class="text-xs font-bold text-[var(--color-dp-primary)] hover:underline">SEE ALL</button>
-            </div>
-            
-            <div class="flex flex-col gap-4 flex-1">
-                <!-- Active Reminder -->
-                <div class="bg-[var(--color-dp-primary)] text-white p-4 rounded-[20px] flex items-center justify-between shadow-sm relative overflow-hidden">
-                    <div class="absolute right-0 top-0 w-24 h-24 bg-white opacity-5 rounded-full blur-xl transform translate-x-1/2 -translate-y-1/2"></div>
-                    
-                    <div class="flex items-center gap-3 relative z-10">
-                        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-semibold text-[15px]">Update</span>
-                            <span class="font-semibold text-[15px]">Devparth UI</span>
-                        </div>
-                    </div>
-                    <button class="text-white/80 hover:text-white p-1 relative z-10">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="1" />
-                            <circle cx="19" cy="12" r="1" />
-                            <circle cx="5" cy="12" r="1" />
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Inactive Reminder -->
-                <div class="bg-gray-50 p-4 rounded-[20px] flex items-center justify-between border border-gray-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 bg-white">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10" />
-                                <polyline points="12 6 12 12 16 14" />
-                            </svg>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-semibold text-[#1a1a24] text-[15px]">Team sync at</span>
-                            <span class="font-semibold text-gray-500 text-[15px]">4 PM</span>
-                        </div>
-                    </div>
-                    <button class="text-gray-400 hover:text-gray-600 p-1">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="1" />
-                            <circle cx="19" cy="12" r="1" />
-                            <circle cx="5" cy="12" r="1" />
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Add Reminder Button -->
-                <button class="mt-auto border-2 border-dashed border-gray-200 rounded-[20px] p-4 flex items-center justify-center gap-2 text-gray-500 font-semibold hover:bg-gray-50 transition-colors">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <line x1="5" y1="12" x2="19" y2="12" />
+            <a href="{{ route('docs.index') }}" class="project-back-btn dashboard-docs-btn">
+                <span class="project-back-btn-slide dashboard-docs-btn-slide">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="14" width="14" aria-hidden="true">
+                        <path d="M160 480h640a32 32 0 1 1 0 64H160a32 32 0 0 1 0-64z" fill="currentColor"></path>
+                        <path d="m786.752 512-265.408 265.344a32 32 0 0 0 45.312 45.312l288-288a32 32 0 0 0 0-45.312l-288-288a32 32 0 1 0-45.312 45.312L786.752 512z" fill="currentColor"></path>
                     </svg>
-                    Add Reminder
-                </button>
-            </div>
+                </span>
+                <span class="project-back-btn-label dashboard-docs-btn-label">Read Documentation</span>
+            </a>
         </div>
-    </div>
+    </section>
 
-    <!-- Column 2: Team Velocity -->
-    <div class="col-span-1">
-        <div class="dp-card h-full flex flex-col relative overflow-hidden">
-            <div class="relative z-10">
-                <h2 class="text-[18px] font-bold text-[#1a1a24] mb-1">Team Velocity</h2>
-                <p class="text-[13px] text-[var(--color-dp-text-muted)] w-2/3">Sprint completion rate is above average.</p>
-            </div>
-            
-            <div class="flex-1 flex items-center justify-center relative z-10">
-                <div class="text-[64px] font-extrabold text-[var(--color-dp-primary)] tracking-tight flex items-center gap-2 drop-shadow-sm">
-                    94% 
-                    <span class="text-4xl">🔥</span>
-                </div>
-            </div>
-            
-            <!-- Subtle Watermark -->
-            <div class="absolute -bottom-4 right-0 text-[160px] font-black text-gray-50 leading-none select-none z-0">
-                #
-            </div>
-
-            <div class="flex flex-wrap gap-2 mt-auto relative z-10 pb-4">
-                <span class="bg-gray-100 text-gray-600 px-4 py-1.5 rounded-full text-[13px] font-semibold">Design</span>
-                <span class="bg-gray-100 text-gray-600 px-4 py-1.5 rounded-full text-[13px] font-semibold">Frontend</span>
-                <span class="bg-[var(--color-dp-primary-light)] text-[var(--color-dp-primary)] px-4 py-1.5 rounded-full text-[13px] font-semibold">Backend</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Column 3: Project Overview & Today's Schedule -->
-    <div class="flex flex-col gap-6 col-span-1">
-        <!-- Project Overview -->
-        <div class="dp-card flex flex-col h-[280px]">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-[18px] font-bold text-[#1a1a24]">Project Overview</h2>
-                <button class="text-gray-400 hover:text-gray-600">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="1" />
-                        <circle cx="12" cy="5" r="1" />
-                        <circle cx="12" cy="19" r="1" />
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="flex-1 flex items-center justify-center relative mb-4">
-                <!-- SVG Donut Chart -->
-                <div class="relative w-40 h-40">
-                    <svg viewBox="0 0 100 100" class="w-full h-full transform -rotate-90">
-                        <!-- Background Ring (Not Started) - Yellow -->
-                        <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--color-dp-yellow)" stroke-width="12" />
-                        
-                        <!-- In Progress Ring - Light Gray -->
-                        <circle cx="50" cy="50" r="40" fill="transparent" stroke="#e4e4e7" stroke-width="12" stroke-dasharray="251.2" stroke-dashoffset="62.8" />
-                        
-                        <!-- Completed Ring - Primary Purple -->
-                        <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--color-dp-primary)" stroke-width="12" stroke-dasharray="251.2" stroke-dashoffset="100.48" class="transition-all duration-1000 ease-out" />
-                    </svg>
-                    <!-- Inner Text -->
-                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                        <span class="text-2xl font-bold text-[#1a1a24]">60%</span>
-                        <span class="text-[11px] font-bold text-gray-400">DONE</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Legend -->
-            <div class="flex justify-between items-center px-2 mt-auto">
-                <div class="flex items-center gap-1.5">
-                    <div class="w-2.5 h-2.5 rounded-full bg-[var(--color-dp-primary)]"></div>
-                    <span class="text-xs text-gray-500 font-medium">Completed</span>
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
-                    <span class="text-xs text-gray-500 font-medium leading-tight">In<br/>Progress</span>
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <div class="w-2.5 h-2.5 rounded-full bg-[var(--color-dp-yellow)]"></div>
-                    <span class="text-xs text-gray-500 font-medium leading-tight">Not<br/>Started</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Today's Schedule -->
-        <div class="dp-card flex flex-col flex-1 h-[400px]">
-            <div class="flex justify-between items-start mb-4">
+    <section class="dashboard-grid">
+        <div class="dashboard-panel dp-card">
+            <div class="dashboard-panel-head">
                 <div>
-                    <h2 class="text-[18px] font-bold text-[#1a1a24] mb-1">Today's Schedule</h2>
-                    <p class="text-[12px] font-medium text-[var(--color-dp-text-muted)]">Thursday, 12.05.24</p>
+                    <h2>Task Progress</h2>
+                    <p>Real completion from your current DailyOps data.</p>
                 </div>
-                <div class="flex gap-2">
-                    <button class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                            <line x1="16" y1="2" x2="16" y2="6" />
-                            <line x1="8" y1="2" x2="8" y2="6" />
-                            <line x1="3" y1="10" x2="21" y2="10" />
-                        </svg>
-                    </button>
-                    <button class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg border border-gray-100">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                        </svg>
-                    </button>
+                <span class="dashboard-badge">This week</span>
+            </div>
+            <div class="dashboard-metric-row">
+                <div class="dashboard-metric-large">{{ $data['task_progress']['completed'] }}<span>/{{ max($data['task_progress']['total'], 1) }}</span></div>
+                <div class="dashboard-metric-side">
+                    <strong>{{ $data['task_progress']['weekly_completed'] }}</strong>
+                    <span>completed this week</span>
                 </div>
             </div>
-
-            <!-- Tabs -->
-            <div class="flex gap-2 mb-4">
-                <button class="bg-[#1a1a24] text-white px-4 py-2 rounded-full text-[13px] font-semibold">
-                    All Meetings
-                </button>
-                <button class="bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-[13px] font-semibold hover:bg-gray-200">
-                    Developer team
-                </button>
+            <div class="dashboard-progress-track">
+                <div class="dashboard-progress-fill" style="width: {{ $data['task_progress']['percent'] }}%"></div>
             </div>
+        </div>
 
-            <!-- Meeting Cards -->
-            <div class="flex gap-3 h-full overflow-hidden">
-                <!-- Card 1 -->
-                <div class="flex-1 bg-gradient-to-b from-[#6b52dc] to-[#5034c4] text-white rounded-[20px] p-4 flex flex-col relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-white opacity-5 rounded-full blur-xl transform translate-x-1/2 -translate-y-1/2"></div>
-                    
-                    <div class="flex items-start gap-2 mb-2 relative z-10">
-                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=hr" class="w-8 h-8 rounded-full bg-white/20" alt="HR" />
-                        <div>
-                            <h3 class="font-bold text-sm leading-tight mb-1">HRD<br/>Meeting</h3>
-                            <span class="text-[9px] font-bold tracking-wider text-white/80 uppercase">HIGH PRIORITY</span>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-auto relative z-10">
-                        <div class="text-[22px] font-bold leading-none mb-1">10:00<br/>AM</div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-white/80 font-medium">Full Review</span>
-                            <div class="flex -space-x-2">
-                                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=a" class="w-6 h-6 rounded-full border-2 border-[#5c41c9] bg-yellow-100" />
-                                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=b" class="w-6 h-6 rounded-full border-2 border-[#5c41c9] bg-blue-100" />
+        <div class="dashboard-panel dp-card dashboard-velocity">
+            <div class="dashboard-panel-head">
+                <div>
+                    <h2>Team Velocity</h2>
+                    <p>{{ $data['velocity']['headline'] }}</p>
+                </div>
+            </div>
+            <div class="dashboard-velocity-score">{{ $data['velocity']['score'] }}%</div>
+            <div class="dashboard-chip-row">
+                @foreach ($data['velocity']['tags'] as $tag)
+                    <span class="dashboard-chip">{{ $tag }}</span>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="dashboard-panel dp-card dashboard-wallet-only-card">
+            <div class="wallet dashboard-wallet dashboard-wallet-inline">
+                <div class="wallet-back"></div>
+                @foreach ($data['wallet']['cards'] as $card)
+                    <div class="card {{ $card['variant'] }}">
+                        <div class="card-inner">
+                            <div class="card-top">
+                                <span>{{ $card['brand'] }}</span>
+                                <div class="chip"></div>
+                            </div>
+                            <div class="card-bottom">
+                                <div class="card-info">
+                                    <span class="label">{{ $card['label'] }}</span>
+                                    <span class="value">{{ $card['value'] }}</span>
+                                </div>
+                                <div class="card-number-wrapper">
+                                    <span class="hidden-stars">{{ $card['masked'] }}</span>
+                                    <span class="card-number">{{ $card['visible'] }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
 
-                <!-- Card 2 -->
-                <div class="flex-1 bg-gray-50 rounded-[20px] p-4 flex flex-col border border-gray-100">
-                    <div class="flex items-start gap-2 mb-2">
-                        <img src="https://api.dicebear.com/7.x/notionists/svg?seed=design" class="w-8 h-8 rounded-full bg-gray-200" alt="Design" />
-                        <div>
-                            <h3 class="font-bold text-sm leading-tight mb-1 text-[#1a1a24]">Design<br/>Review</h3>
-                            <span class="text-[9px] font-bold tracking-wider text-gray-500 uppercase">DEV TEAM</span>
+                <div class="pocket">
+                    <svg class="pocket-svg" viewBox="0 0 280 160" fill="none">
+                        <path d="M 0 20 C 0 10, 5 10, 10 10 C 20 10, 25 25, 40 25 L 240 25 C 255 25, 260 10, 270 10 C 275 10, 280 10, 280 20 L 280 120 C 280 155, 260 160, 240 160 L 40 160 C 20 160, 0 155, 0 120 Z" fill="#1e341e"></path>
+                        <path d="M 8 22 C 8 16, 12 16, 15 16 C 23 16, 27 29, 40 29 L 240 29 C 253 29, 257 16, 265 16 C 268 16, 272 16, 272 22 L 272 120 C 272 150, 255 152, 240 152 L 40 152 C 25 152, 8 152, 8 120 Z" stroke="#3d5635" stroke-width="1.5" stroke-dasharray="6 4"></path>
+                    </svg>
+                    <div class="pocket-content">
+                        <div class="tx-balance-wrap">
+                            <div class="balance-stars">******</div>
+                            <div class="balance-real">₹{{ number_format($data['wallet']['net'], 0) }}</div>
                         </div>
-                    </div>
-                    
-                    <div class="mt-auto">
-                        <div class="text-[22px] font-bold text-[#1a1a24] leading-none mb-1">2:30<br/>PM</div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs text-gray-500 font-medium">Sync Up</span>
-                            <div class="flex -space-x-2">
-                                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=c" class="w-6 h-6 rounded-full border-2 border-white bg-green-100" />
-                                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=d" class="w-6 h-6 rounded-full border-2 border-white bg-pink-100" />
-                                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=e" class="w-6 h-6 rounded-full border-2 border-white bg-indigo-100" />
-                            </div>
+                        <div class="tx-balance-label">{{ $data['wallet']['balance_label'] }}</div>
+                        <div class="eye-icon-wrapper">
+                            <svg class="eye-icon eye-slash" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <line x1="3" y1="3" x2="21" y2="21"></line>
+                            </svg>
+                            <svg class="eye-icon eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
+        <div class="dashboard-panel dp-card">
+            <div class="dashboard-panel-head">
+                <div>
+                    <h2>Focus Reminders</h2>
+                    <p>Tasks pinned for follow-through.</p>
+                </div>
+            </div>
+            <div class="dashboard-list">
+                @forelse ($data['reminders'] as $reminder)
+                    <div class="dashboard-list-item {{ $reminder['active'] ? 'is-active' : '' }}">
+                        <div>
+                            <strong>{{ $reminder['title'] }}</strong>
+                            <span>{{ $reminder['subtitle'] }}</span>
+                        </div>
+                        <span class="dashboard-dot"></span>
+                    </div>
+                @empty
+                    <p class="dashboard-empty-copy">No focus reminders yet.</p>
+                @endforelse
+            </div>
+        </div>
+
+        <div class="dashboard-panel dp-card dashboard-panel-wide">
+            <div class="dashboard-panel-head">
+                <div>
+                    <p class="tx-wallet-kicker">Dashboard</p>
+                    <h2>Today's Schedule</h2>
+                    <p>Upcoming due tasks and live planning for the day ahead.</p>
+                </div>
+            </div>
+            <div class="dashboard-schedule">
+                @forelse ($data['schedule'] as $item)
+                    <div class="dashboard-schedule-card {{ $item['accent'] === 'primary' ? 'is-primary' : '' }}">
+                        <span class="dashboard-schedule-badge">{{ $item['badge'] }}</span>
+                        <h3>{{ $item['title'] }}</h3>
+                        <div class="dashboard-schedule-time">{{ $item['time'] }}</div>
+                        <p>{{ $item['caption'] }}</p>
+                    </div>
+                @empty
+                    <p class="dashboard-empty-copy">No scheduled tasks yet. Add due dates in DailyOps to see them here.</p>
+                @endforelse
+            </div>
+        </div>
+    </section>
 </div>
 @endsection

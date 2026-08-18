@@ -13,7 +13,7 @@
                 request()->is('projects*') || request()->is('project-based*') => 'Projects',
                 request()->is('transaction*') || request()->is('transactions*') => 'Transaction',
                 request()->is('audit-log*') => 'Audit Log',
-                request()->is('settings*') => 'Settings',
+                request()->is('docs*') => 'Documentation',
                 request()->is('invoice*') => 'Invoices',
                 request()->is('cards*') => 'Cards',
                 default => 'DevOS',
@@ -44,6 +44,10 @@
                     && localStorage.getItem('devos_sidebar_collapsed') === '1') {
                     document.documentElement.classList.add('sidebar-collapsed-pending');
                 }
+                if (localStorage.getItem('devos_theme') === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.style.colorScheme = 'dark';
+                }
             } catch (error) {
                 // ignore
             }
@@ -60,13 +64,12 @@
             <!-- Header -->
             <header class="dp-header">
                 <div class="dp-header-left">
-                    <button type="button" id="navbarSidebarToggle" class="dp-header-menu" aria-label="Toggle menu" aria-expanded="true">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <line x1="4" y1="6" x2="20" y2="6" />
-                            <line x1="4" y1="12" x2="20" y2="12" />
-                            <line x1="4" y1="18" x2="20" y2="18" />
-                        </svg>
-                    </button>
+                    <input type="checkbox" id="devos-menu-checkbox" class="dp-menu-checkbox" tabindex="-1" aria-hidden="true" />
+                    <label for="devos-menu-checkbox" class="toggle dp-header-menu" id="navbarSidebarToggle" aria-label="Toggle menu" aria-expanded="true" role="button">
+                        <span class="bars" id="bar1"></span>
+                        <span class="bars" id="bar2"></span>
+                        <span class="bars" id="bar3"></span>
+                    </label>
                     <h1 class="dp-header-title">{{ $navbarTitle }}</h1>
                 </div>
                 <div class="dp-header-right">
@@ -129,14 +132,18 @@
                             <!-- Appearance Toggle -->
                             <div class="flex items-center justify-between px-5 py-2.5 mt-1 mb-2">
                                 <span class="text-[14px] font-medium text-[#4a4a5a]">Appearance</span>
-                                <div class="relative inline-flex items-center w-[64px] h-[32px] rounded-full bg-gray-100 p-1 cursor-pointer">
-                                    <div class="w-[24px] h-[24px] bg-white rounded-full shadow-sm flex items-center justify-center relative z-10">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a1a24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
-                                    </div>
-                                    <div class="absolute right-[6px] w-[24px] h-[24px] flex items-center justify-center text-gray-400">
+                                <button type="button" id="themeToggle" class="dp-theme-toggle" aria-pressed="false" aria-label="Switch to dark mode">
+                                    <span class="dp-theme-face dp-theme-face--sun" aria-hidden="true">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+                                    </span>
+                                    <span class="dp-theme-face dp-theme-face--moon" aria-hidden="true">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                                    </div>
-                                </div>
+                                    </span>
+                                    <span class="dp-theme-knob" aria-hidden="true">
+                                        <svg class="dp-theme-knob-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+                                        <svg class="dp-theme-knob-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                                    </span>
+                                </button>
                             </div>
 
                             <div class="px-3 pb-1">

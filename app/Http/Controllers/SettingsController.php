@@ -241,25 +241,12 @@ class SettingsController extends Controller
 
     public function smtpToggle(Request $request, SmtpService $smtp)
     {
-        $validator = Validator::make($request->all(), [
-            'enabled' => 'required|boolean',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first() ?: 'Invalid SMTP status.',
-                'errors' => $validator->errors()->toArray(),
-            ], 422);
-        }
-
-        $enabled = $request->boolean('enabled');
-        $smtp->setEnabled($enabled);
-
         return response()->json([
             'success' => true,
             'enabled' => $smtp->isEnabled(),
-            'message' => $enabled ? 'SMTP enabled.' : 'SMTP disabled.',
+            'message' => $smtp->isEnabled()
+                ? 'SMTP is configured via environment variables.'
+                : 'SMTP is not fully configured.',
         ]);
     }
 

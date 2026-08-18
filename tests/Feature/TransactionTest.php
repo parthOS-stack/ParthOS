@@ -35,7 +35,8 @@ class TransactionTest extends TestCase
 
         $this->assertStringContainsString('Transactions', $html);
         $this->assertStringContainsString('Add Transaction', $html);
-        $this->assertStringContainsString('YOU\'LL RECEIVE', $html);
+        $this->assertStringContainsString('Transaction Wallet', $html);
+        $this->assertStringContainsString('Premium Overview', $html);
         $this->assertStringContainsString('dailyops-task-table', $html);
         $this->assertStringContainsString('transactionModalOverlay', $html);
     }
@@ -65,6 +66,12 @@ class TransactionTest extends TestCase
         $response->assertJsonPath('summary.receivable', 15000);
         $response->assertJsonPath('summary.payable', 2400);
         $response->assertJsonPath('summary.net', 12600);
+        $response->assertJsonPath('summary.total_transactions', 2);
+        $response->assertJsonCount(3, 'hero.cards');
+        $response->assertJsonPath('hero.cards.2.brand', 'Recent');
+        $response->assertJsonPath('hero.cards.2.type_label', 'Payable');
+        $this->assertNotEmpty($response->json('hero.cards.2.date_label'));
+        $this->assertNotEmpty($response->json('hero.cards.2.amount_label'));
         $response->assertJsonCount(2, 'transactions');
 
         $this->getJson('/transactions/data?filter=receivable')

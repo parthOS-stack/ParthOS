@@ -2,6 +2,13 @@
 
 @section('content')
 <div class="projects-page" data-projects-root>
+    <div class="premium-shell-banner mb-6">
+        <div>
+            <p class="premium-shell-kicker">Projects</p>
+            <h2 class="premium-shell-title">Track every project with cleaner momentum.</h2>
+            <p class="premium-shell-copy">Filters, cards, and modals below keep their existing behavior while the page gets a lighter premium shell.</p>
+        </div>
+    </div>
 
     <div class="dailyops-toolbar">
         <div class="dailyops-toolbar-left">

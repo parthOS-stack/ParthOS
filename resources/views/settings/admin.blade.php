@@ -39,6 +39,14 @@
         </div>
     @endif
 
+    <div class="premium-shell-banner premium-shell-banner--compact mb-6">
+        <div>
+            <p class="premium-shell-kicker">Settings</p>
+            <h2 class="premium-shell-title">Account controls with cleaner context.</h2>
+            <p class="premium-shell-copy">Credentials, SMTP, and preferences remain functionally the same while the admin page picks up the premium dashboard style.</p>
+        </div>
+    </div>
+
     {{-- Admin Settings Card --}}
     <div class="dp-card mb-6">
         {{-- Section Header --}}
@@ -219,13 +227,9 @@
                     <span id="smtpTestBtnLabel">Test SMTP</span>
                 </button>
                 <div class="flex items-center gap-3 pl-1">
-                    <span id="smtpToggleLabel" class="text-[13px] font-semibold {{ $smtp['enabled'] ? 'text-[var(--color-dp-primary)]' : 'text-[var(--color-dp-text-muted)]' }}">
-                        {{ $smtp['enabled'] ? 'SMTP Enabled' : 'SMTP Disabled' }}
+                    <span id="smtpStatusLabel" class="text-[13px] font-semibold {{ $smtp['configured'] ? 'text-[var(--color-dp-primary)]' : 'text-[var(--color-dp-text-muted)]' }}">
+                        {{ $smtp['configured'] ? 'SMTP Ready' : 'SMTP Not Fully Configured' }}
                     </span>
-                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
-                        <input type="checkbox" class="sr-only peer" id="smtpEnabledToggle" {{ $smtp['enabled'] ? 'checked' : '' }}>
-                        <div class="w-[52px] h-[28px] bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[24px] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-[24px] after:w-[24px] after:transition-all peer-checked:bg-[var(--color-dp-primary)] shadow-inner"></div>
-                    </label>
                 </div>
             </div>
         </div>
@@ -517,8 +521,7 @@
             const testBtn = document.getElementById('smtpTestBtn');
             const testLabel = document.getElementById('smtpTestBtnLabel');
             const testSpinner = document.getElementById('smtpTestSpinner');
-            const toggle = document.getElementById('smtpEnabledToggle');
-            const toggleLabel = document.getElementById('smtpToggleLabel');
+            const statusLabel = document.getElementById('smtpStatusLabel');
             const modal = document.getElementById('smtpTestEmailModal');
             const form = document.getElementById('smtpTestEmailForm');
             const recipient = document.getElementById('smtpTestRecipient');
@@ -527,8 +530,6 @@
 
             let testing = false;
             let sending = false;
-            let toggling = false;
-
             const alertOk = (title, description) => {
                 if (window.DevOSAlert) window.DevOSAlert.success(title, description);
             };
@@ -547,12 +548,11 @@
                 return { status: res.status, body: data };
             };
 
-            const setToggleUi = (enabled) => {
-                if (toggle) toggle.checked = enabled;
-                if (toggleLabel) {
-                    toggleLabel.textContent = enabled ? 'SMTP Enabled' : 'SMTP Disabled';
-                    toggleLabel.classList.toggle('text-[var(--color-dp-primary)]', enabled);
-                    toggleLabel.classList.toggle('text-[var(--color-dp-text-muted)]', !enabled);
+            const setStatusUi = (configured) => {
+                if (statusLabel) {
+                    statusLabel.textContent = configured ? 'SMTP Ready' : 'SMTP Not Fully Configured';
+                    statusLabel.classList.toggle('text-[var(--color-dp-primary)]', configured);
+                    statusLabel.classList.toggle('text-[var(--color-dp-text-muted)]', !configured);
                 }
             };
 
@@ -577,31 +577,7 @@
                 modal?.classList.add('hidden');
             };
 
-            toggle?.addEventListener('change', async () => {
-                if (toggling) return;
-                toggling = true;
-                const enabled = Boolean(toggle.checked);
-                setToggleUi(enabled);
-                try {
-                    const res = await parseJson(await fetch('{{ route('settings.smtp.toggle') }}', {
-                        method: 'POST',
-                        headers: jsonHeaders,
-                        body: JSON.stringify({ enabled }),
-                    }));
-                    if (!res.body.success) {
-                        setToggleUi(!enabled);
-                        alertErr('SMTP update failed', res.body.message || 'Unable to update SMTP status.');
-                        return;
-                    }
-                    setToggleUi(Boolean(res.body.enabled));
-                    alertOk('done successfully :)', res.body.message || (enabled ? 'SMTP enabled.' : 'SMTP disabled.'));
-                } catch {
-                    setToggleUi(!enabled);
-                    alertErr('SMTP update failed', 'Unable to update SMTP status.');
-                } finally {
-                    toggling = false;
-                }
-            });
+            setStatusUi({{ $smtp['configured'] ? 'true' : 'false' }});
 
             testBtn?.addEventListener('click', async () => {
                 if (testing) return;

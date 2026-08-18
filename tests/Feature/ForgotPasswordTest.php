@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Admin;
-use App\Models\AppSetting;
 use App\Models\PasswordResetOtp;
 use App\Services\ForgotPasswordService;
 use App\Services\SmtpService;
@@ -38,7 +37,6 @@ class ForgotPasswordTest extends TestCase
         ]);
 
         app(SmtpService::class)->setEnabled(true);
-        app(\App\Services\NotificationSettingsService::class)->setEmailEnabled(true);
     }
 
     public function test_forgot_password_page_matches_login_style_and_default_email(): void
@@ -131,27 +129,21 @@ class ForgotPasswordTest extends TestCase
         $this->assertTrue($admin->verifyPassword('OldPass123'));
     }
 
-    public function test_disabled_smtp_blocks_send_otp(): void
+    public function test_unconfigured_smtp_blocks_send_otp(): void
     {
         $this->seedAdmin();
-        AppSetting::setValue('smtp_enabled', '0');
-
-        $this->postJson('/forgot-password/send-otp', [
-            'email' => 'partthtest@gmail.com',
-        ])->assertStatus(400)
-            ->assertJsonPath('success', false);
-    }
-
-    public function test_disabled_email_notifications_block_otp(): void
-    {
-        $this->seedAdmin();
-        $this->enableSmtp();
-        app(\App\Services\NotificationSettingsService::class)->setEmailEnabled(false);
+        config([
+            'mail.mailers.smtp.host' => '',
+            'mail.mailers.smtp.port' => 0,
+            'mail.mailers.smtp.username' => '',
+            'mail.mailers.smtp.password' => '',
+            'mail.from.address' => '',
+        ]);
 
         $this->postJson('/forgot-password/send-otp', [
             'email' => 'partthtest@gmail.com',
         ])->assertStatus(400)
             ->assertJsonPath('success', false)
-            ->assertJsonFragment(['message' => 'Email notifications are disabled. Enable Email Notifications in Settings to receive OTP emails.']);
+            ->assertJsonPath('message', 'Email service is unavailable. SMTP is not fully configured.');
     }
 }

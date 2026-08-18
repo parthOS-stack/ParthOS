@@ -3,7 +3,7 @@
 How the important parts of DevOS work. Constants in the **Auto-synced** sections are refreshed by `php artisan docs:sync`.
 
 <!-- docs:sync-time:start -->
-Last auto-sync: **Aug 17, 2026 9:03 AM UTC**
+Last auto-sync: **Aug 18, 2026 10:52 AM UTC**
 <!-- docs:sync-time:end -->
 
 ---
@@ -51,7 +51,7 @@ Locked accounts cannot sign in even with the correct password. Use **Forgot Pass
 
 ```
 Step 1  Email (default: admin email or MAIL_FROM_ADDRESS)
-Step 2  Send OTP → email via SmtpService (requires SMTP enabled)
+Step 2  Send OTP → email via SmtpService (requires SMTP to be fully configured)
 Step 3  Verify 6-digit OTP
 Step 4  Modal: Reset Password  OR  Go to Dashboard
 Step 5a Reset → new password → redirect login (clears lockout)
@@ -76,11 +76,10 @@ Step 5b Dashboard → session login without password change
 | What | Where |
 |------|-------|
 | Host, port, username, password | `.env` only |
-| Enabled/disabled toggle | `app_settings.smtp_enabled` |
 | Test connection | Admin Settings → Test SMTP |
 | Test email | Sends DevOS-branded OTP template (OTP **not** stored in DB) |
 
-Forgot password and test emails require SMTP to be **enabled** in Admin Settings.
+Forgot password and test emails require SMTP to be fully configured in environment variables.
 
 **Code:** `SmtpService`, `SettingsController`
 
@@ -90,7 +89,7 @@ Forgot password and test emails require SMTP to be **enabled** in Admin Settings
 
 - **Username / password** — uses session `admin_id` (not first DB row)
 - **Current password** required only when setting a new password
-- **SMTP section** — read-only `.env` fields + enable toggle + test actions
+- **SMTP section** — read-only `.env` fields + test actions
 - **Audit Log** — Open Audit Log button links to `/audit-log`
 
 ---
@@ -100,7 +99,7 @@ Forgot password and test emails require SMTP to be **enabled** in Admin Settings
 | Toggle | When ON | When OFF |
 |--------|---------|----------|
 | **Push Notifications** | Header bell shows in-app alerts | Bell hidden; new in-app alerts are not stored |
-| **Email Notifications** | Forgot-password OTP emails can send (SMTP must also be on) | OTP emails are blocked |
+| **Email Notifications** | General email notifications can send when configured | General email notifications are blocked |
 | **App Sounds** | Upload a custom sound; it plays for new bell pings and success/error toasts | Silent; upload panel hidden |
 
 Custom sound (MP3 / WAV / OGG / M4A, max 2 MB) plays **only while App Sounds is enabled**. If no file is uploaded, a default ping is used.
@@ -126,6 +125,29 @@ Custom sound (MP3 / WAV / OGG / M4A, max 2 MB) plays **only while App Sounds is 
 | SMTP toggle, settings changes | Not audited | — |
 
 **Code:** `AuditLogController`, `LoginLog` model, `AdminAuthController::logAttempt()`
+
+---
+
+## 9. Documentation (`/docs`)
+
+`/docs` is the only documentation page. Twelve vertical panels sit in a row. Overview starts open with a watermark and blue border. Hovering another panel closes the open one and expands the hovered section in place — there is no inner article page.
+
+| Panel | Source |
+|-------|--------|
+| Overview | README intro and quick start |
+| Login | Login + lockout flow |
+| Password | OTP recovery flow |
+| Dashboard | Live home snapshot |
+| DailyOps | Tasks workspace |
+| Projects | Project workspace |
+| Transactions | Wallet and ledger |
+| Notifications | Bell, list, and notification settings |
+| Audit Log | `login_logs` history |
+| Settings | Profile, admin, SMTP |
+| Security | Standard + High Security lockers |
+| Routes | `docs/PAGES.md` route table |
+
+`/docs/{section}` redirects back to `/docs`.
 
 ---
 

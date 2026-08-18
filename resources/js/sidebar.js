@@ -34,20 +34,34 @@ const DevOSSidebar = (() => {
         return sidebar()?.classList.contains('is-mobile-open') ?? false;
     }
 
+    function menuCheckbox() {
+        return document.getElementById('devos-menu-checkbox');
+    }
+
     function updateToggleUi() {
         const navBtn = navbarToggleBtn();
+        const box = menuCheckbox();
         if (!navBtn) return;
 
+        let expanded = true;
+        let checked = false;
+
         if (isMobile()) {
-            const open = isMobileOpen();
-            navBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-            navBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-            return;
+            expanded = isMobileOpen();
+            checked = isMobileOpen();
+            navBtn.setAttribute('aria-label', expanded ? 'Close menu' : 'Open menu');
+        } else {
+            const collapsed = isCollapsed();
+            expanded = !collapsed;
+            checked = collapsed;
+            navBtn.setAttribute('aria-label', collapsed ? 'Open menu' : 'Close menu');
         }
 
-        const collapsed = isCollapsed();
-        navBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
-        navBtn.setAttribute('aria-label', collapsed ? 'Open menu' : 'Close menu');
+        navBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+
+        if (box && box.checked !== checked) {
+            box.checked = checked;
+        }
     }
 
     function setMobileOpen(open) {
@@ -138,7 +152,20 @@ const DevOSSidebar = (() => {
         if (!el) return;
 
         restore();
-        navbarToggleBtn()?.addEventListener('click', toggle);
+
+        navbarToggleBtn()?.addEventListener('click', (event) => {
+            event.preventDefault();
+            toggle();
+        });
+
+        navbarToggleBtn()?.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter' && event.key !== ' ') {
+                return;
+            }
+
+            event.preventDefault();
+            toggle();
+        });
         overlay()?.addEventListener('click', () => setMobileOpen(false));
 
         el.querySelectorAll('.dp-nav-item, .dp-sidebar-brand').forEach((link) => {

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Mail\OtpVerificationMail;
-use App\Models\AppSetting;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -13,16 +12,14 @@ use Throwable;
 
 class SmtpService
 {
-    public const SETTING_KEY = 'smtp_enabled';
-
     public function isEnabled(): bool
     {
-        return AppSetting::getValue(self::SETTING_KEY, '0') === '1';
+        return $this->isConfigured();
     }
 
     public function setEnabled(bool $enabled): void
     {
-        AppSetting::setValue(self::SETTING_KEY, $enabled ? '1' : '0');
+        // SMTP availability is driven by environment configuration.
     }
 
     public function isConfigured(): bool
@@ -96,8 +93,8 @@ class SmtpService
         if (!$this->isEnabled()) {
             return [
                 'success' => false,
-                'code' => 'disabled',
-                'message' => 'SMTP is disabled. Enable SMTP to send email.',
+                'code' => 'not_configured',
+                'message' => 'SMTP is not fully configured.',
             ];
         }
 
@@ -142,10 +139,6 @@ class SmtpService
     public function assertCanSend(): void
     {
         if (!$this->isEnabled()) {
-            throw new \RuntimeException('SMTP is disabled. Enable SMTP to send email.');
-        }
-
-        if (!$this->isConfigured()) {
             throw new \RuntimeException('SMTP is not fully configured.');
         }
     }

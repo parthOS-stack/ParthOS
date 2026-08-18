@@ -53,6 +53,8 @@ Overview of every web route in DevOS.
 | DailyOps | POST | `/tasks/{id}/duplicate` | `tasks.duplicate` | Duplicate Task (API) | Yes | active | Clones one task. |
 | DailyOps | PATCH | `/tasks/{id}/status` | `tasks.updateStatus` | Update Status (API) | Yes | active | Changes task status only. |
 | Dashboard | GET | `/dashboard` | `—` | Dashboard | Yes | active | Main home view after login. |
+| Dashboard | GET | `/docs` | `docs.index` | Documentation | Yes | active | Single /docs landing: 12 hover panels with watermark expand. No inner article pages. |
+| Dashboard | GET | `/docs/{section}` | `docs.show` | Documentation Section | Yes | active | Legacy section URL; redirects to the /docs landing accordion. |
 | Finance | GET | `/cards` | `—` | Cards | Yes | placeholder | Placeholder UI — not fully wired yet. |
 | Finance | GET | `/invoice` | `—` | Invoice | Yes | placeholder | Placeholder UI — not fully wired yet. |
 | Finance | GET | `/transaction` | `transactions.page` | Transactions | Yes | active | Track receivables, payables, and net balance. |
@@ -72,7 +74,7 @@ Overview of every web route in DevOS.
 | Projects | POST | `/projects/{id}/delete` | `projects.destroy` | Delete Project (API) | Yes | active | Permanently deletes a project. |
 | Projects | POST | `/projects/{id}/update` | `projects.update` | Update Project (API) | Yes | active | Updates project fields. |
 | Settings | GET | `/settings` | `—` | Settings Redirect | Yes | active | Redirects to profile settings. |
-| Settings | GET | `/settings/admin` | `settings.admin` | Admin Settings | Yes | active | Username/password, SMTP toggle, read-only mail config from .env. |
+| Settings | GET | `/settings/admin` | `settings.admin` | Admin Settings | Yes | active | Username/password, read-only mail config from .env, and SMTP test tools. |
 | Settings | POST | `/settings/admin` | `settings.admin.update` | Update Admin (API) | Yes | active | Changes admin username and/or password. |
 | Settings | GET | `/settings/notifications` | `settings.notifications` | Notification Settings | Yes | active | Bell, security OTP email, and app sound preferences. |
 | Settings | POST | `/settings/notifications/sound` | `settings.notifications.sound` | Upload Notification Sound (API) | Yes | active | Stores a custom sound used for bell pings and toasts. |
@@ -95,8 +97,8 @@ Overview of every web route in DevOS.
 | Settings | POST | `/settings/security-high-credentials/{id}/pin` | `settings.security.high.pin` | Pin High Credential (API) | Yes | active | Pins high-security credential. |
 | Settings | POST | `/settings/security-high/unlock` | `settings.security.high.unlock` | Unlock High Security (API) | Yes | active | Unlocks high-security session with master password. |
 | Settings | GET | `/settings/security-list` | `settings.security.list` | Security List (API) | Yes | active | Lists saved credentials. |
-| Settings | GET | `/settings/smtp` | `settings.smtp.status` | SMTP Status (API) | Yes | active | Returns whether SMTP is enabled (no secrets). |
-| Settings | POST | `/settings/smtp/enabled` | `settings.smtp.toggle` | SMTP Toggle (API) | Yes | active | Enables or disables outbound email. |
+| Settings | GET | `/settings/smtp` | `settings.smtp.status` | SMTP Status (API) | Yes | active | Returns SMTP configuration status (no secrets). |
+| Settings | POST | `/settings/smtp/enabled` | `settings.smtp.toggle` | SMTP Compatibility Status (API) | Yes | active | Returns SMTP readiness for older clients that still call the toggle endpoint. |
 | Settings | POST | `/settings/smtp/test` | `settings.smtp.test` | SMTP Test (API) | Yes | active | Tests SMTP connection. |
 | Settings | POST | `/settings/smtp/test-email` | `settings.smtp.test-email` | Send Test Email (API) | Yes | active | Sends DevOS-branded OTP test email (OTP not stored in DB). |
 

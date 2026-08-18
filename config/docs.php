@@ -87,6 +87,19 @@ return [
             'status' => 'active',
         ],
 
+        'docs.index' => [
+            'module' => 'Dashboard',
+            'page' => 'Documentation',
+            'description' => 'Single /docs landing: 12 hover panels with watermark expand. No inner article pages.',
+            'status' => 'active',
+        ],
+        'docs.show' => [
+            'module' => 'Dashboard',
+            'page' => 'Documentation Section',
+            'description' => 'Legacy section URL; redirects to the /docs landing accordion.',
+            'status' => 'active',
+        ],
+
         'tasks.index' => [
             'module' => 'DailyOps',
             'page' => 'Tasks',
@@ -230,7 +243,7 @@ return [
         'settings.admin' => [
             'module' => 'Settings',
             'page' => 'Admin Settings',
-            'description' => 'Username/password, SMTP toggle, read-only mail config from .env.',
+            'description' => 'Username/password, read-only mail config from .env, and SMTP test tools.',
             'status' => 'active',
         ],
         'settings.admin.update' => [
@@ -242,13 +255,13 @@ return [
         'settings.smtp.status' => [
             'module' => 'Settings',
             'page' => 'SMTP Status (API)',
-            'description' => 'Returns whether SMTP is enabled (no secrets).',
+            'description' => 'Returns SMTP configuration status (no secrets).',
             'status' => 'active',
         ],
         'settings.smtp.toggle' => [
             'module' => 'Settings',
-            'page' => 'SMTP Toggle (API)',
-            'description' => 'Enables or disables outbound email.',
+            'page' => 'SMTP Compatibility Status (API)',
+            'description' => 'Returns SMTP readiness for older clients that still call the toggle endpoint.',
             'status' => 'active',
         ],
         'settings.smtp.test' => [

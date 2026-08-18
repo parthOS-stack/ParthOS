@@ -42,14 +42,7 @@ class ForgotPasswordService
         }
 
         if (!$this->smtp->isEnabled()) {
-            return ['success' => false, 'message' => 'Email service is unavailable. Enable SMTP in Admin Settings.'];
-        }
-
-        if (!app(NotificationSettingsService::class)->isEmailEnabled()) {
-            return [
-                'success' => false,
-                'message' => 'Email notifications are disabled. Enable Email Notifications in Settings to receive OTP emails.',
-            ];
+            return ['success' => false, 'message' => 'Email service is unavailable. SMTP is not fully configured.'];
         }
 
         $rateKey = 'forgot-password-send:' . $ip;

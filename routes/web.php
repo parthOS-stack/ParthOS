@@ -19,9 +19,9 @@ Route::redirect('/', '/dashboard');
 
 // Protected Dashboard Routes
 Route::middleware(['admin.auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('welcome');
-    });
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index']);
+    Route::get('/docs', [\App\Http\Controllers\DocsController::class, 'index'])->name('docs.index');
+    Route::get('/docs/{section}', [\App\Http\Controllers\DocsController::class, 'show'])->name('docs.show');
 
     Route::get('/audit-log', [\App\Http\Controllers\AuditLogController::class, 'index'])->name('audit-log.index');
 

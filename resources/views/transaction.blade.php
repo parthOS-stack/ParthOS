@@ -18,18 +18,119 @@
         </button>
     </div>
 
-    <div class="tx-summary-grid">
-        <div class="tx-summary-card">
-            <p class="tx-summary-label">YOU'LL RECEIVE</p>
-            <p class="tx-summary-value tx-summary-value--green" id="txSummaryReceivable">₹0</p>
+    <div class="tx-wallet-shell dp-card">
+        <div class="tx-wallet-copy">
+            <p class="tx-wallet-kicker">Premium Overview</p>
+            <h2 class="tx-wallet-title">Transaction Wallet</h2>
+            <p class="tx-wallet-subtitle">See receivables, payouts, and your net position in one premium snapshot.</p>
+
+            <div class="tx-wallet-metrics">
+                <div class="tx-wallet-metric">
+                    <span class="tx-wallet-metric-label">You'll receive</span>
+                    <span class="tx-wallet-metric-value tx-summary-value--green" id="txSummaryReceivable">₹0</span>
+                </div>
+                <div class="tx-wallet-metric">
+                    <span class="tx-wallet-metric-label">You'll pay</span>
+                    <span class="tx-wallet-metric-value tx-summary-value--red" id="txSummaryPayable">₹0</span>
+                </div>
+                <div class="tx-wallet-metric">
+                    <span class="tx-wallet-metric-label">Total entries</span>
+                    <span class="tx-wallet-metric-value" id="txSummaryCount">0</span>
+                </div>
+            </div>
         </div>
-        <div class="tx-summary-card">
-            <p class="tx-summary-label">YOU'LL PAY</p>
-            <p class="tx-summary-value tx-summary-value--red" id="txSummaryPayable">₹0</p>
-        </div>
-        <div class="tx-summary-card">
-            <p class="tx-summary-label">NET BALANCE</p>
-            <p class="tx-summary-value tx-summary-value--green" id="txSummaryNet">₹0</p>
+
+        <div class="tx-wallet-stage">
+            <div class="wallet" id="txWallet">
+                <div class="wallet-back"></div>
+
+                <div class="card stripe">
+                    <div class="card-inner">
+                        <div class="card-top">
+                            <span id="txHeroBrand1">Receivable</span>
+                            <div class="chip"></div>
+                        </div>
+                        <div class="card-bottom">
+                            <div class="card-info">
+                                <span class="label" id="txHeroLabel1">Top client</span>
+                                <span class="value" id="txHeroValue1">No receivables yet</span>
+                            </div>
+                            <div class="card-number-wrapper">
+                                <span class="hidden-stars" id="txHeroMasked1">RCV •••• 0000</span>
+                                <span class="card-number" id="txHeroVisible1">RCV 0000 0000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card wise">
+                    <div class="card-inner">
+                        <div class="card-top">
+                            <span id="txHeroBrand2">Payable</span>
+                            <div class="chip"></div>
+                        </div>
+                        <div class="card-bottom">
+                            <div class="card-info">
+                                <span class="label" id="txHeroLabel2">Top payout</span>
+                                <span class="value" id="txHeroValue2">No payables yet</span>
+                            </div>
+                            <div class="card-number-wrapper">
+                                <span class="hidden-stars" id="txHeroMasked2">PAY •••• 0000</span>
+                                <span class="card-number" id="txHeroVisible2">PAY 0000 0000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card paypal">
+                    <div class="card-inner">
+                        <div class="card-top">
+                            <span id="txHeroBrand3">Recent</span>
+                            <div class="chip"></div>
+                        </div>
+                        <div class="card-bottom">
+                            <div class="card-info">
+                                <span class="label" id="txHeroLabel3">Latest entry</span>
+                                <span class="value" id="txHeroValue3">No transactions yet</span>
+                            </div>
+                            <div class="card-number-wrapper">
+                                <span class="hidden-stars" id="txHeroMasked3">TX •••• 0000</span>
+                                <span class="card-number" id="txHeroVisible3">TX 0000 0000</span>
+                            </div>
+                        </div>
+                        <div class="card-meta" id="txHeroMeta3" hidden>
+                            <span><em>Amount</em> <strong id="txHeroAmount3">—</strong></span>
+                            <span><em>Type</em> <strong id="txHeroType3">—</strong></span>
+                            <span><em>Date</em> <strong id="txHeroDate3">—</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pocket">
+                    <svg class="pocket-svg" viewBox="0 0 280 160" fill="none">
+                        <path d="M 0 20 C 0 10, 5 10, 10 10 C 20 10, 25 25, 40 25 L 240 25 C 255 25, 260 10, 270 10 C 275 10, 280 10, 280 20 L 280 120 C 280 155, 260 160, 240 160 L 40 160 C 20 160, 0 155, 0 120 Z" fill="#1e341e"></path>
+                        <path d="M 8 22 C 8 16, 12 16, 15 16 C 23 16, 27 29, 40 29 L 240 29 C 253 29, 257 16, 265 16 C 268 16, 272 16, 272 22 L 272 120 C 272 150, 255 152, 240 152 L 40 152 C 25 152, 8 152, 8 120 Z" stroke="#3d5635" stroke-width="1.5" stroke-dasharray="6 4"></path>
+                    </svg>
+                    <div class="pocket-content">
+                        <div class="tx-balance-wrap">
+                            <div class="balance-stars">******</div>
+                            <div class="balance-real" id="txSummaryNet">₹0</div>
+                        </div>
+                        <div class="tx-balance-label" id="txSummaryNetLabel">Net Balance</div>
+                        <div class="eye-icon-wrapper">
+                            <svg class="eye-icon eye-slash" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <line x1="3" y1="3" x2="21" y2="21"></line>
+                            </svg>
+                            <svg class="eye-icon eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

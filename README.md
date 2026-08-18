@@ -35,7 +35,7 @@ composer dev
 | `MAIL_FROM_ADDRESS` | Default sender / fallback forgot-password email |
 | `HIGH_SECURITY_PASSWORD` | Master password for High Security Locker |
 
-SMTP credentials are read from `.env`. Admin Settings only stores whether SMTP is **enabled** (`app_settings.smtp_enabled`).
+SMTP credentials are read from `.env`. Admin Settings shows read-only mail config and lets you test the SMTP connection.
 
 ## Documentation
 
@@ -66,7 +66,7 @@ php artisan docs:sync --check
 ```
 
 <!-- docs:sync-time:start -->
-Docs last synced: **Aug 17, 2026 9:03 AM UTC** — run `php artisan docs:sync` after route or flow changes.
+Docs last synced: **Aug 18, 2026 10:52 AM UTC** — run `php artisan docs:sync` after route or flow changes.
 <!-- docs:sync-time:end -->
 
 ## Tests

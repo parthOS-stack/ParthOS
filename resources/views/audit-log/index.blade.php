@@ -4,6 +4,14 @@
 @section('header_subtitle', 'Login, logout, and failed attempt history.')
 
 @section('content')
+    <div class="premium-shell-banner premium-shell-banner--compact mb-6">
+        <div>
+            <p class="premium-shell-kicker">Audit Log</p>
+            <h2 class="premium-shell-title">Security events at a glance.</h2>
+            <p class="premium-shell-copy">Recent access activity stays server-rendered, with only a visual refresh around the existing filters and records.</p>
+        </div>
+    </div>
+
     <div class="audit-stats-grid grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         <div class="dp-card !p-5">
             <p class="text-[12px] font-bold uppercase tracking-wider text-[var(--color-dp-text-muted)]">Total events</p>

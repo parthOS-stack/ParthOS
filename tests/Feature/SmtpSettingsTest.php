@@ -54,7 +54,7 @@ class SmtpSettingsTest extends TestCase
             ->assertJsonPath('host', 'smtp.example.test')
             ->assertJsonPath('port', 587)
             ->assertJsonPath('encryption', 'TLS')
-            ->assertJsonPath('enabled', false)
+            ->assertJsonPath('enabled', true)
             ->assertJsonMissingPath('username')
             ->assertJsonMissingPath('password');
 
@@ -73,39 +73,40 @@ class SmtpSettingsTest extends TestCase
 
         $this->assertStringContainsString('SMTP Settings', $html);
         $this->assertStringContainsString('Test SMTP', $html);
-        $this->assertStringContainsString('SMTP Disabled', $html);
+        $this->assertStringContainsString('SMTP Ready', $html);
         $this->assertStringNotContainsString('super-secret-smtp-password', $html);
         $this->assertStringNotContainsString('smtp-user@example.test', $html);
         $this->assertStringNotContainsString('secretpassword', $html);
     }
 
-    public function test_can_enable_and_disable_smtp(): void
+    public function test_smtp_toggle_endpoint_returns_configured_status_without_writing_settings(): void
     {
         $this->actingAsAdmin();
+        $this->configureMail();
 
         $this->postJson('/settings/smtp/enabled', ['enabled' => true])
             ->assertOk()
             ->assertJsonPath('enabled', true);
 
-        $this->assertSame('1', AppSetting::getValue('smtp_enabled'));
-
-        $this->postJson('/settings/smtp/enabled', ['enabled' => false])
-            ->assertOk()
-            ->assertJsonPath('enabled', false);
-
-        $this->assertSame('0', AppSetting::getValue('smtp_enabled'));
+        $this->assertNull(AppSetting::getValue('smtp_enabled'));
     }
 
-    public function test_disabled_smtp_blocks_test_email(): void
+    public function test_unconfigured_smtp_blocks_test_email(): void
     {
         $this->actingAsAdmin();
-        $this->configureMail();
+        config([
+            'mail.mailers.smtp.host' => '',
+            'mail.mailers.smtp.port' => 0,
+            'mail.mailers.smtp.username' => '',
+            'mail.mailers.smtp.password' => '',
+            'mail.from.address' => '',
+        ]);
 
         $this->postJson('/settings/smtp/test-email', [
             'email' => 'recipient@example.test',
-        ])->assertForbidden()
+        ])->assertStatus(400)
             ->assertJsonPath('success', false)
-            ->assertJsonPath('code', 'disabled');
+            ->assertJsonPath('code', 'not_configured');
     }
 
     public function test_invalid_recipient_email_is_rejected(): void

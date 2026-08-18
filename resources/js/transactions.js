@@ -7,6 +7,7 @@ const Transactions = (() => {
         filter: 'all',
         items: [],
         summary: { receivable: 0, payable: 0, net: 0 },
+        hero: { cards: [], balance_label: 'Net Balance' },
         loading: false,
         initialized: false,
     };
@@ -51,14 +52,51 @@ const Transactions = (() => {
         const receivableEl = document.getElementById('txSummaryReceivable');
         const payableEl = document.getElementById('txSummaryPayable');
         const netEl = document.getElementById('txSummaryNet');
+        const countEl = document.getElementById('txSummaryCount');
+        const netLabelEl = document.getElementById('txSummaryNetLabel');
 
         if (receivableEl) receivableEl.textContent = formatMoney(receivable);
         if (payableEl) payableEl.textContent = formatMoney(payable);
+        if (countEl) countEl.textContent = String(state.summary.total_transactions || state.items.length || 0);
         if (netEl) {
             netEl.textContent = formatMoney(net);
             netEl.classList.toggle('tx-summary-value--green', net >= 0);
             netEl.classList.toggle('tx-summary-value--red', net < 0);
         }
+        if (netLabelEl) netLabelEl.textContent = state.hero.balance_label || 'Net Balance';
+    }
+
+    function updateHero() {
+        const cards = Array.isArray(state.hero.cards) ? state.hero.cards : [];
+
+        cards.slice(0, 3).forEach((card, index) => {
+            const pos = index + 1;
+            const brand = document.getElementById(`txHeroBrand${pos}`);
+            const label = document.getElementById(`txHeroLabel${pos}`);
+            const value = document.getElementById(`txHeroValue${pos}`);
+            const masked = document.getElementById(`txHeroMasked${pos}`);
+            const visible = document.getElementById(`txHeroVisible${pos}`);
+
+            if (brand) brand.textContent = card.brand || '';
+            if (label) label.textContent = card.label || '';
+            if (value) value.textContent = card.value || '';
+            if (masked) masked.textContent = card.masked || '';
+            if (visible) visible.textContent = card.visible || '';
+        });
+
+        const recent = cards[2] || {};
+        const meta = document.getElementById('txHeroMeta3');
+        const amount = document.getElementById('txHeroAmount3');
+        const type = document.getElementById('txHeroType3');
+        const date = document.getElementById('txHeroDate3');
+        const hasRecent = Boolean(recent.amount) || Boolean(recent.type);
+
+        if (amount) amount.textContent = recent.amount_label && recent.amount_label !== 'No amount'
+            ? recent.amount_label
+            : (recent.amount ? formatMoney(recent.amount) : '—');
+        if (type) type.textContent = recent.type_label || '—';
+        if (date) date.textContent = recent.date_label || '—';
+        if (meta) meta.hidden = !hasRecent;
     }
 
     function renderList() {
@@ -113,11 +151,14 @@ const Transactions = (() => {
             const data = await response.json();
             state.items = data.transactions || [];
             state.summary = data.summary || { receivable: 0, payable: 0, net: 0 };
+            state.hero = data.hero || { cards: [], balance_label: 'Net Balance' };
             updateSummary();
+            updateHero();
             renderList();
         } catch (error) {
             console.error(error);
             state.items = [];
+            state.hero = { cards: [], balance_label: 'Net Balance' };
             renderList();
             window.DevOSAlert?.error('Unable to load', 'Transactions could not be loaded.');
         } finally {

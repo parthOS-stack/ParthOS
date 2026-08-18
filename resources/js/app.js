@@ -5,7 +5,10 @@ import DevOSSounds from './sounds.js';
 import DevOSSidebar from './sidebar.js';
 import LogoutSwipe from './logout-swipe.js';
 import DevOSHourglass from './hourglass-loader.js';
+import Dashboard from './dashboard.js';
 import Transactions from './transactions.js';
+import DocsLanding from './docs.js';
+import DevOSTheme from './theme.js';
 
 const DailyOps = (() => {
     const STATUS_MAP = {
@@ -2518,7 +2521,10 @@ function bootApp() {
     DevOSNotifications.init();
     DailyOps.init();
     Projects.init();
+    Dashboard.init();
     Transactions.init();
+    DocsLanding.init();
+    DevOSTheme.init();
 }
 
 if (document.readyState === 'loading') {
