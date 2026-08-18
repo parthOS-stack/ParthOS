@@ -92,7 +92,7 @@
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
                 </svg>
             </div>
-            <p class="font-semibold text-[#1a1a24] mb-1" style="font-size:15px;">No projects yet</p>
+            <p class="font-semibold text-[var(--color-dp-text-main)] mb-1" style="font-size:15px;">No projects yet</p>
             <p class="text-[var(--color-dp-text-muted)]" style="font-size:13px;">Create your first project to organize your work.</p>
             <button type="button" data-open-add-project class="dailyops-add-task" style="margin-top:18px;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

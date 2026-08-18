@@ -182,7 +182,7 @@
                     <line x1="16" y1="17" x2="8" y2="17" />
                 </svg>
             </div>
-            <p class="font-semibold text-[#1a1a24] mb-1" style="font-size:15px;">No transactions yet</p>
+            <p class="font-semibold text-[var(--color-dp-text-main)] mb-1" style="font-size:15px;">No transactions yet</p>
             <p class="text-[var(--color-dp-text-muted)]" style="font-size:13px;">Add your first receivable or payable entry to start tracking money.</p>
         </div>
     </div>

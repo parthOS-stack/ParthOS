@@ -161,7 +161,7 @@
                     <line x1="3" y1="10" x2="21" y2="10"/>
                 </svg>
             </div>
-            <p class="font-semibold text-[#1a1a24] mb-1" style="font-size:15px;">No tasks yet</p>
+            <p class="font-semibold text-[var(--color-dp-text-main)] mb-1" style="font-size:15px;">No tasks yet</p>
             <p class="text-[var(--color-dp-text-muted)]" style="font-size:13px;">Start by adding your first task for today.</p>
             <button
                 type="button"

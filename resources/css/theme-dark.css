@@ -506,8 +506,9 @@ html.dark .checkbox-pro-container .checkmark {
 }
 
 html.dark .project-key-badge {
-    background: var(--color-dp-primary-light);
-    border-color: rgba(139, 120, 232, 0.28);
+    background: #2a2444;
+    border-color: rgba(139, 120, 232, 0.4);
+    color: #dcd6ff;
 }
 
 html.dark .project-progress-bar {
@@ -550,10 +551,8 @@ html.dark .project-back-btn {
     box-shadow: none;
 }
 
-html.dark .project-key-badge {
-    background: #2a2444;
-    border-color: rgba(139, 120, 232, 0.4);
-    color: #dcd6ff;
+html.dark .project-back-btn-label {
+    color: var(--color-dp-text-main);
 }
 
 html.dark .tx-wallet-metric {
