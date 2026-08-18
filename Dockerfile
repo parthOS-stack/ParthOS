@@ -50,6 +50,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_MAX_PARALLEL_HTTP=4
+ENV COMPOSER_PROCESS_TIMEOUT=1200
 
 COPY . .
 
@@ -71,7 +73,11 @@ RUN test -f composer.json && test -f artisan && test -f .env.example \
 
 # --no-scripts: composer.json runs `php artisan package:discover`, which crashes
 # without APP_KEY when APP_ENV=production (composer exit 100).
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-scripts \
+# Avoid `--prefer-dist` here: Render builds are hitting GitHub zipball 429/504s.
+RUN composer config -g process-timeout 1200 \
+    && composer config -g github-protocols https \
+    && composer clear-cache \
+    && composer install --no-dev --optimize-autoloader --no-interaction --prefer-install=auto --no-scripts \
     && composer dump-autoload --optimize --no-scripts \
     && php artisan package:discover --ansi \
     && php artisan storage:link \
